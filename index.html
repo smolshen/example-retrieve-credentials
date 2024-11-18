@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button id="fetchData">Retrieve Client Credentials</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('fetchData').addEventListener('click', function () {
+            // Send an AJAX request to retrieve client credentials
+            $.ajax({
+                url: 'retrieve_credentials.php', // File is in the same folder
+                type: 'POST',
+                data: { action: 'getClientCredentials' }, //call php function
+                success: function (response) {
+                    const credentials = JSON.parse(response); // Parse JSON response
+                    if (credentials.error) {
+                        document.getElementById('result').innerHTML = `Error: ${credentials.error}`; // display if theres an error
+                    } else {
+                        // display credentials
+                        document.getElementById('result').innerHTML = `
+                            <strong>Client ID:</strong> ${credentials.client_id}<br>
+                            <strong>Client Secret:</strong> ${credentials.client_secret}
+                        `;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
